@@ -1,0 +1,258 @@
+-- MySQL Workbench Synchronization
+-- Generated: 2024-11-15 22:37
+-- Model: New Model
+-- Version: 1.0
+-- Project: Name of the project
+-- Author: MARLA
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+CREATE TABLE IF NOT EXISTS `modelorelacional`.`Clientes` (
+  `idCliente` INT(11) NULL DEFAULT NULL,
+  `nombre` VARCHAR(45) NOT NULL,
+  `apellido` VARCHAR(45) NOT NULL,
+  `fechanacimiento` VARCHAR(45) NULL DEFAULT NULL,
+  `correoElectronico` VARCHAR(45) NULL DEFAULT NULL,
+  `numeroIdentificacion` VARCHAR(45) NULL DEFAULT NULL,
+  `fechaRegistro` DATE NULL DEFAULT NULL,
+  `numLicConducir` VARCHAR(45) NULL DEFAULT NULL,
+  `FechVenLic` DATE NOT NULL,
+  `Direccion_idDireccion` INT(11) NOT NULL,
+  PRIMARY KEY (`idCliente`, `Direccion_idDireccion`),
+  UNIQUE INDEX `numeroIdentificacion_UNIQUE` (`numeroIdentificacion` ASC) VISIBLE,
+  UNIQUE INDEX `numLicConducir_UNIQUE` (`numLicConducir` ASC) VISIBLE,
+  INDEX `fk_Clientes_Direccion1_idx` (`Direccion_idDireccion` ASC) VISIBLE,
+  CONSTRAINT `fk_Clientes_Direccion1`
+    FOREIGN KEY (`Direccion_idDireccion`)
+    REFERENCES `modelorelacional`.`Direccion` (`idDireccion`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `modelorelacional`.`Vehiculo` (
+  `idVehiculo` INT(11) NULL DEFAULT NULL,
+  `idCliente` INT(11) NULL DEFAULT NULL,
+  `año` INT(11) NULL DEFAULT NULL,
+  `color` VARCHAR(45) NULL DEFAULT NULL,
+  `numMatricula` INT(11) NULL DEFAULT NULL,
+  `tipoCombustible` VARCHAR(45) NULL DEFAULT NULL,
+  `Bin` VARCHAR(45) NOT NULL,
+  `fechaRegistro` DATE NULL DEFAULT NULL,
+  `Clientes_idCliente` INT(11) NOT NULL,
+  `Solicitud_idSolicitud` INT(11) NOT NULL,
+  `Solicitud_Clientes_idCliente` INT(11) NOT NULL,
+  `Marca_idMarca` INT(11) NOT NULL,
+  `Modelo_idModelo` INT(11) NOT NULL,
+  PRIMARY KEY (`idVehiculo`, `Clientes_idCliente`, `Solicitud_idSolicitud`, `Solicitud_Clientes_idCliente`, `Marca_idMarca`, `Modelo_idModelo`),
+  UNIQUE INDEX `numPlaca_UNIQUE` (`numMatricula` ASC) VISIBLE,
+  INDEX `fk_Vehiculo_Clientes_idx` (`Clientes_idCliente` ASC) VISIBLE,
+  INDEX `fk_Vehiculo_Solicitud1_idx` (`Solicitud_idSolicitud` ASC, `Solicitud_Clientes_idCliente` ASC) VISIBLE,
+  INDEX `fk_Vehiculo_Marca1_idx` (`Marca_idMarca` ASC) VISIBLE,
+  INDEX `fk_Vehiculo_Modelo1_idx` (`Modelo_idModelo` ASC) VISIBLE,
+  CONSTRAINT `fk_Vehiculo_Clientes`
+    FOREIGN KEY (`Clientes_idCliente`)
+    REFERENCES `modelorelacional`.`Clientes` (`idCliente`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Vehiculo_Solicitud1`
+    FOREIGN KEY (`Solicitud_idSolicitud` , `Solicitud_Clientes_idCliente`)
+    REFERENCES `modelorelacional`.`Solicitud` (`idSolicitud` , `Clientes_idCliente`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Vehiculo_Marca1`
+    FOREIGN KEY (`Marca_idMarca`)
+    REFERENCES `modelorelacional`.`Marca` (`idMarca`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Vehiculo_Modelo1`
+    FOREIGN KEY (`Modelo_idModelo`)
+    REFERENCES `modelorelacional`.`Modelo` (`idModelo`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `modelorelacional`.`Referencia` (
+  `idReferencia` INT(11) NULL DEFAULT NULL,
+  `idCliente` INT(11) NULL DEFAULT NULL,
+  `nombreReferencia` VARCHAR(45) NULL DEFAULT NULL,
+  `telefonoReferencia` VARCHAR(45) NULL DEFAULT NULL,
+  `relacion` VARCHAR(45) NULL DEFAULT NULL,
+  `direccionReferencia` VARCHAR(45) NOT NULL,
+  `Parentesco` VARCHAR(45) NOT NULL,
+  `Clientes_idCliente` INT(11) NOT NULL,
+  PRIMARY KEY (`idReferencia`, `Clientes_idCliente`),
+  INDEX `fk_Referencia_Clientes1_idx` (`Clientes_idCliente` ASC) VISIBLE,
+  CONSTRAINT `fk_Referencia_Clientes1`
+    FOREIGN KEY (`Clientes_idCliente`)
+    REFERENCES `modelorelacional`.`Clientes` (`idCliente`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `modelorelacional`.`Oficina` (
+  `idOficina` INT(11) NULL DEFAULT NULL,
+  `nombre` VARCHAR(45) NOT NULL,
+  `horarioOficina` DATE NOT NULL,
+  `telefono` VARCHAR(45) NULL DEFAULT NULL,
+  `email` VARCHAR(45) NULL DEFAULT NULL,
+  `Clientes_idCliente` INT(11) NOT NULL,
+  `Direccion_idDireccion` INT(11) NOT NULL,
+  `Solicitud_idSolicitud` INT(11) NOT NULL,
+  `Solicitud_Clientes_idCliente` INT(11) NOT NULL,
+  PRIMARY KEY (`idOficina`, `Clientes_idCliente`, `Direccion_idDireccion`, `Solicitud_idSolicitud`, `Solicitud_Clientes_idCliente`),
+  UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE,
+  INDEX `fk_Oficina_Clientes1_idx` (`Clientes_idCliente` ASC) VISIBLE,
+  INDEX `fk_Oficina_Direccion1_idx` (`Direccion_idDireccion` ASC) VISIBLE,
+  INDEX `fk_Oficina_Solicitud1_idx` (`Solicitud_idSolicitud` ASC, `Solicitud_Clientes_idCliente` ASC) VISIBLE,
+  CONSTRAINT `fk_Oficina_Clientes1`
+    FOREIGN KEY (`Clientes_idCliente`)
+    REFERENCES `modelorelacional`.`Clientes` (`idCliente`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Oficina_Direccion1`
+    FOREIGN KEY (`Direccion_idDireccion`)
+    REFERENCES `modelorelacional`.`Direccion` (`idDireccion`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Oficina_Solicitud1`
+    FOREIGN KEY (`Solicitud_idSolicitud` , `Solicitud_Clientes_idCliente`)
+    REFERENCES `modelorelacional`.`Solicitud` (`idSolicitud` , `Clientes_idCliente`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `modelorelacional`.`Solicitud` (
+  `idSolicitud` INT(11) NULL DEFAULT NULL,
+  `fechaSolicitud` DATE NOT NULL,
+  `estadoSolicitud` VARCHAR(45) NULL DEFAULT NULL,
+  `clienteId` INT(11) NULL DEFAULT NULL,
+  `numeroVin` VARCHAR(45) NULL DEFAULT NULL,
+  `Clientes_idCliente` INT(11) NOT NULL,
+  `fechHoraRetiro` DATE NOT NULL,
+  `fechaHoraDevolucion` DATE NOT NULL,
+  `retiro` VARCHAR(45) NOT NULL,
+  `devolucion` VARCHAR(45) NOT NULL,
+  `Solicitud` VARCHAR(45) NOT NULL,
+  `montoTotal` VARCHAR(45) NOT NULL,
+  `total a Pagar` VARCHAR(45) NOT NULL,
+  `Oficina_Entrega` VARCHAR(45) NULL DEFAULT NULL,
+  `Oficina_Devolucion` VARCHAR(45) NULL DEFAULT NULL,
+  PRIMARY KEY (`idSolicitud`, `Clientes_idCliente`),
+  INDEX `fk_Solicitud_Clientes1_idx` (`Clientes_idCliente` ASC) VISIBLE,
+  CONSTRAINT `fk_Solicitud_Clientes1`
+    FOREIGN KEY (`Clientes_idCliente`)
+    REFERENCES `modelorelacional`.`Clientes` (`idCliente`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `modelorelacional`.`Factura` (
+  `idFactura` INT(11) NULL DEFAULT NULL,
+  `nombreCliente` VARCHAR(45) NOT NULL,
+  `cantidadPago` VARCHAR(45) NOT NULL,
+  `idCliente` INT(11) NULL DEFAULT NULL,
+  `idServicio` INT(11) NULL DEFAULT NULL,
+  `fechapago` DATE NOT NULL,
+  `fechaEmision` DATE NOT NULL,
+  `fechaFactura` VARCHAR(45) NULL DEFAULT NULL,
+  `ISV` VARCHAR(45) NOT NULL,
+  `montoTotal` DECIMAL NULL DEFAULT NULL,
+  `Clientes_idCliente` INT(11) NOT NULL,
+  `Solicitud_idSolicitud` INT(11) NOT NULL,
+  `Solicitud_Clientes_idCliente` INT(11) NOT NULL,
+  PRIMARY KEY (`idFactura`, `Clientes_idCliente`, `Solicitud_idSolicitud`, `Solicitud_Clientes_idCliente`),
+  INDEX `fk_Factura_Clientes1_idx` (`Clientes_idCliente` ASC) VISIBLE,
+  INDEX `fk_Factura_Solicitud1_idx` (`Solicitud_idSolicitud` ASC, `Solicitud_Clientes_idCliente` ASC) VISIBLE,
+  CONSTRAINT `fk_Factura_Clientes1`
+    FOREIGN KEY (`Clientes_idCliente`)
+    REFERENCES `modelorelacional`.`Clientes` (`idCliente`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Factura_Solicitud1`
+    FOREIGN KEY (`Solicitud_idSolicitud` , `Solicitud_Clientes_idCliente`)
+    REFERENCES `modelorelacional`.`Solicitud` (`idSolicitud` , `Clientes_idCliente`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `modelorelacional`.`TarifaVehiculo` (
+  `idTarifaVehiculo` INT(11) NULL DEFAULT NULL,
+  `tarifaBase` DECIMAL NOT NULL,
+  `tarifaPorDia` DECIMAL NOT NULL,
+  `tarifaPorKm` DECIMAL NULL DEFAULT NULL,
+  `fechaInicio` DATE NOT NULL,
+  `fechaFin` DATE NULL DEFAULT NULL,
+  `Vehiculo_idVehiculo` INT(11) NOT NULL,
+  `Vehiculo_Clientes_idCliente` INT(11) NOT NULL,
+  PRIMARY KEY (`idTarifaVehiculo`, `Vehiculo_idVehiculo`, `Vehiculo_Clientes_idCliente`),
+  INDEX `fk_TarifaVehiculo_Vehiculo1_idx` (`Vehiculo_idVehiculo` ASC, `Vehiculo_Clientes_idCliente` ASC) VISIBLE,
+  CONSTRAINT `fk_TarifaVehiculo_Vehiculo1`
+    FOREIGN KEY (`Vehiculo_idVehiculo` , `Vehiculo_Clientes_idCliente`)
+    REFERENCES `modelorelacional`.`Vehiculo` (`idVehiculo` , `Clientes_idCliente`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `modelorelacional`.`Modelo` (
+  `idModelo` INT(11) NOT NULL AUTO_INCREMENT,
+  `Nombre_Modelo` VARCHAR(45) NULL DEFAULT NULL,
+  `Pais` VARCHAR(45) NULL DEFAULT NULL,
+  `Fecha_Registro` DATE NULL DEFAULT NULL,
+  `TipoVehiculo_idTipoVehiculo` INT(11) NOT NULL,
+  PRIMARY KEY (`idModelo`, `TipoVehiculo_idTipoVehiculo`),
+  INDEX `fk_Modelo_TipoVehiculo1_idx` (`TipoVehiculo_idTipoVehiculo` ASC) VISIBLE,
+  CONSTRAINT `fk_Modelo_TipoVehiculo1`
+    FOREIGN KEY (`TipoVehiculo_idTipoVehiculo`)
+    REFERENCES `modelorelacional`.`TipoVehiculo` (`idTipoVehiculo`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `modelorelacional`.`Marca` (
+  `idMarca` INT(11) NOT NULL AUTO_INCREMENT,
+  `Nombre_Marca` VARCHAR(45) NULL DEFAULT NULL,
+  `Pais` VARCHAR(45) NULL DEFAULT NULL,
+  `Fecha_Registro` DATE NULL DEFAULT NULL,
+  `Modelo_idModelo` INT(11) NOT NULL,
+  PRIMARY KEY (`idMarca`, `Modelo_idModelo`),
+  INDEX `fk_Marca_Modelo1_idx` (`Modelo_idModelo` ASC) VISIBLE,
+  CONSTRAINT `fk_Marca_Modelo1`
+    FOREIGN KEY (`Modelo_idModelo`)
+    REFERENCES `modelorelacional`.`Modelo` (`idModelo`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `modelorelacional`.`TipoVehiculo` (
+  `idTipoVehiculo` INT(11) NOT NULL AUTO_INCREMENT,
+  `Tipo_Vehiculo` VARCHAR(45) NULL DEFAULT NULL COMMENT 'PICK-UP,Turismo,Camioneta,etc...',
+  `Transmision` VARCHAR(45) NULL DEFAULT NULL COMMENT '2x2,4x2,4x4, AWD,etc...',
+  PRIMARY KEY (`idTipoVehiculo`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `modelorelacional`.`Direccion` (
+  `idDireccion` INT(11) NOT NULL AUTO_INCREMENT,
+  `Departamento` VARCHAR(45) NULL DEFAULT NULL,
+  `Ciudad` VARCHAR(45) NULL DEFAULT NULL,
+  `Colonia` VARCHAR(45) NULL DEFAULT NULL,
+  `Referencia` VARCHAR(45) NULL DEFAULT NULL,
+  PRIMARY KEY (`idDireccion`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
