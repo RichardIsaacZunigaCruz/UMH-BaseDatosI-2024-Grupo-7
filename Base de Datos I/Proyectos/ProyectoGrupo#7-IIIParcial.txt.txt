@@ -1,0 +1,89 @@
+-- MySQL Workbench Synchronization
+-- Generated: 2024-12-08 17:49
+-- Model: New Model
+-- Version: 1.0
+-- Project: Name of the project
+-- Author: 20190
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+ALTER SCHEMA grupo7  DEFAULT CHARACTER SET utf8  DEFAULT COLLATE utf8_general_ci ;
+
+ALTER TABLE grupo7.Solicitantes 
+DROP FOREIGN KEY fk_Solicitantes_Pasaportes1,
+DROP FOREIGN KEY fk_Solicitantes_Visa1;
+
+ALTER TABLE grupo7.Pasaportes 
+DROP FOREIGN KEY fk_Pasaportes_tipoPasaporte1;
+
+ALTER TABLE grupo7.Contacto 
+DROP FOREIGN KEY fk_Contacto_Solicitantes1;
+
+ALTER TABLE grupo7.Solicitantes 
+CHARACTER SET = utf8 , COLLATE = utf8_general_ci ,
+ADD COLUMN Documentos Adjuntos_idDocumentos Adjuntos INT(11) NOT NULL AFTER propositoViaje,
+ADD INDEX fk_Solicitantes_Documentos Adjuntos1_idx (Documentos Adjuntos_idDocumentos Adjuntos ASC) VISIBLE;
+;
+
+ALTER TABLE grupo7.Pasaportes 
+CHARACTER SET = utf8 , COLLATE = utf8_general_ci ;
+
+ALTER TABLE grupo7.Contacto 
+CHARACTER SET = utf8 , COLLATE = utf8_general_ci ;
+
+ALTER TABLE grupo7.duracionEstancia 
+CHARACTER SET = utf8 , COLLATE = utf8_general_ci ;
+
+ALTER TABLE grupo7.Documentos Adjuntos 
+CHARACTER SET = utf8 , COLLATE = utf8_general_ci ;
+
+ALTER TABLE grupo7.Visa 
+CHARACTER SET = utf8 , COLLATE = utf8_general_ci ;
+
+ALTER TABLE grupo7.tipoPasaporte 
+CHARACTER SET = utf8 , COLLATE = utf8_general_ci ;
+
+ALTER TABLE grupo7.Solicitantes 
+DROP FOREIGN KEY fk_Solicitantes_Motivo de Viaje1;
+
+ALTER TABLE grupo7.Solicitantes ADD CONSTRAINT fk_Solicitantes_Pasaportes1
+  FOREIGN KEY (Pasaportes_idPasaporte)
+  REFERENCES grupo7.Pasaportes (idPasaporte)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION,
+ADD CONSTRAINT fk_Solicitantes_Visa1
+  FOREIGN KEY (Visa_idVisa)
+  REFERENCES grupo7.Visa (idVisa)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION,
+ADD CONSTRAINT fk_Solicitantes_Motivo de Viaje1
+  FOREIGN KEY (temporalidadEstancia)
+  REFERENCES grupo7.duracionEstancia (idMotivo de Viaje)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION,
+ADD CONSTRAINT fk_Solicitantes_Documentos Adjuntos1
+  FOREIGN KEY (Documentos Adjuntos_idDocumentos Adjuntos)
+  REFERENCES grupo7.Documentos Adjuntos (idDocumentos Adjuntos)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+ALTER TABLE grupo7.Pasaportes 
+ADD CONSTRAINT fk_Pasaportes_tipoPasaporte1
+  FOREIGN KEY (tipoPasaporte)
+  REFERENCES grupo7.tipoPasaporte (idtipoPasaporte)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+ALTER TABLE grupo7.Contacto 
+ADD CONSTRAINT fk_Contacto_Solicitantes1
+  FOREIGN KEY (Solicitantes_idSolicitantes)
+  REFERENCES grupo7.Solicitantes (idSolicitantes)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
