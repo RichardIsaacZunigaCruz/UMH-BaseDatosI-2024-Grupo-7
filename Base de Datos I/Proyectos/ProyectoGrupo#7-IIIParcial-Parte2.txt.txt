@@ -1,0 +1,87 @@
+/* Insertar datos en funcionarios */
+select current_date();
+INSERT INTO grupo7.funcionario
+(idFuncionario,
+nombre_funcionario,
+rol_funcionario)
+VALUES
+(2, "Roberto Aguirre", "Administrador");
+
+
+/* Insertar datos en visas */
+INSERT INTO grupo7.visa
+(idVisa,
+tipoVisa,
+anioDuracion)
+VALUES
+(10,"Servicio"8);
+
+/* Insertar datos en Pasaportes */
+INSERT INTO grupo7.tipopasaporte
+(idtipoPasaporte,
+tipoPasaporte)
+VALUES
+(3, "Laissez-Passer");
+
+
+/* Insertar datos en Pasaportes */
+INSERT INTO grupo7.pasaportes
+(idPasaporte,
+numero_pasaporte,
+paisExpedicion,
+fecha_emision,
+fecha_vecimineto,
+tipoPasaporte)
+VALUES
+(4, "NC4356","Nicaragua","2024-09-06","2034-09-06",3);
+
+/* Insertar datos en contacto */
+INSERT INTO grupo7.contacto
+(idContacto,
+domicilio,
+telefono,
+correo_electronico,
+Solicitantes_idSolicitantes)
+VALUES
+(1,"Col. 21 de Octubre","2222-2222","correo1@gmailcom",1);
+
+/* Insertar datos en solicitante */
+INSERT INTO grupo7.solicitantes
+(idSolicitantes,
+nombre,
+primer_apellido,
+segundo_apellido,
+sexo,
+fecha_nacimiento,
+edad,
+pais_nacimiento,
+nacionalidad,
+estado_civil,
+Pasaportes_idPasaporte,
+Visa_idVisa,
+Ocupación,
+nombreCompania,
+lugarRecidencia,
+AntecedentesPenales,
+fechaIngreso,
+ciudadIngreso,
+temporalidadEstancia,
+visitadoMexico,
+propositoViaje,
+Solicitantescol)
+VALUES
+(1,"Ariel","Hernández","Sánchez",
+"Masculino","1993-12-01",32,"Honduras","Hondureña",
+"Casado",1,1,"Project Manager","FINCA","Tegucigalpa",
+0,0,"2025-06-10","DF Mexico",1,0,"N/A","Vacaciones","N/A");
+
+
+
+update pasaportes set numero_pasaporte = "NC9343"
+where idPasaporte = 4;
+
+select * from grupo7.visa
+select * from grupo7.tipopasaporte
+select * from grupo7.pasaportes
+select * from grupo7.duracionestancia
+select * from grupo7.documentosadjuntos
